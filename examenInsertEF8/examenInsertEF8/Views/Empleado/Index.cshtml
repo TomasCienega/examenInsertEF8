@@ -1,0 +1,95 @@
+﻿@model examenInsertEF8.ViewModel.EmpleadoVM
+
+@{
+    ViewData["Title"] = "Form Usuario";
+}
+
+<div class="container mt-2">
+
+    <div class="m-2 ">
+        <form asp-action="Guardar" method="post" class="card">
+            <div class="card-header m-2">
+                <h2 class="fw-bold">Form Empleados</h2>
+            </div>
+            <div class="card-body m-">
+                <div class="m-2">
+                    <label>Nombre Empleado: </label>
+                    <input asp-for="EmpleadoModelReference.NombreEmpleado" required />
+                </div>
+                <div class="m-2">
+                    <label>Departamento: </label>
+                    <select asp-for="EmpleadoModelReference.IdDepartamento" 
+                            asp-items="@(new SelectList(Model.ListaDepartamentos, "IdDepartamento", "NombreDepartamento"))" required>
+                        <option value="">--Selecciona un Departamento--</option>
+                    </select>
+                </div>
+                <div class="m-2">
+                    <button type="submit" class="btn btn-outline-secondary">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="m-2">
+        <div class="card">
+            <div class="card-header m-2">
+                <h2 class="fw-bold">Filtro Departamento</h2>
+            </div>
+            <div class="card-body">
+
+                    <select onchange="location.href='?idDep='+this.value">
+                        <option value="0">--Ver Todo--</option>
+                        @foreach (var dep in Model.ListaDepartamentos)
+                        {
+                            <option value="@dep.IdDepartamento"
+                                    selected="@(dep.IdDepartamento == ViewBag.IdSeleccionado)">
+                                @dep.NombreDepartamento
+                            </option>
+                        }
+                    </select>
+
+
+                    <a asp-action="Index" class="btn btn-outline-primary m-2">
+                        Limpir
+                    </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="m-2">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>IdEmpleado</th>
+                    <th>Nombre Empleado</th>
+                    <th>Departamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListaEmpleados==null || !Model.ListaEmpleados.Any())
+                {
+                    <tr>
+                        <td >No se econtro Usuario con esas Especificaciones</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var emp in Model.ListaEmpleados)
+                    {
+                        <tr>
+                            <td class="fw-bold">@emp.IdEmpleado</td>
+                            <td>@emp.NombreEmpleado</td>
+                            <td>@emp.IdDepartamentoNavigation?.NombreDepartamento</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
